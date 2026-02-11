@@ -33,6 +33,12 @@ app.use('/api/export', exportRoutes);
 const frontendPath = path.resolve(__dirname, '../../frontend/public');
 app.use(express.static(frontendPath));
 
+app.get('/pages/:page', (req, res, next) => {
+  const { page } = req.params;
+  if (!page || page.includes('.')) return next();
+  return res.redirect(302, `/pages/${page}.html`);
+});
+
 app.get('/', (_req, res) => {
   return res.sendFile(path.join(frontendPath, 'index.html'));
 });
