@@ -1,0 +1,30 @@
+<svg width="740" height="180" viewBox="0 0 740 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#783FF2"/>
+      <stop offset="1" stop-color="#9F60FF"/>
+    </linearGradient>
+    <linearGradient id="checkGrad" x1="24" y1="120" x2="130" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4AC7DC"/>
+      <stop offset="1" stop-color="#7DE2DA"/>
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="195" y1="24" x2="672" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#783FF2"/>
+      <stop offset="1" stop-color="#7DE2DA"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="8" y="12" width="160" height="156" rx="28" fill="url(#bgGrad)"/>
+  <rect x="42" y="34" width="96" height="74" rx="10" fill="#4E28A8" fill-opacity="0.58"/>
+  <rect x="53" y="46" width="67" height="7" rx="3.5" fill="#C9AEFF" fill-opacity="0.9"/>
+  <rect x="53" y="61" width="53" height="7" rx="3.5" fill="#B99DFF" fill-opacity="0.85"/>
+  <rect x="53" y="76" width="36" height="7" rx="3.5" fill="#AA8DFF" fill-opacity="0.8"/>
+
+  <path d="M22 101C41 103 63 114 82 136C106 112 122 96 148 83C126 117 107 132 83 157C60 126 43 112 22 101Z" fill="url(#checkGrad)"/>
+
+  <circle cx="131" cy="132" r="30" fill="#351A83" stroke="#F7F4FF" stroke-width="5"/>
+  <text x="131" y="143" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="43" font-weight="700" fill="#FFFFFF">$</text>
+
+  <text x="194" y="92" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="800" fill="url(#titleGrad)">SaldoFacil</text>
+  <text x="198" y="136" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="600" fill="#B8B6EA">Gerenciamento de Contas</text>
+</svg>
