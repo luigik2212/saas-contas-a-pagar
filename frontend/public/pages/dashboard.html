@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="topbar no-print">
+      <h1>Dashboard</h1>
+      <div>
+        <span id="hello"></span>
+        <button id="logoutBtn" class="secondary">Sair</button>
+      </div>
+    </header>
+
+    <div class="card no-print" style="margin:12px 0;">
+      <label>Mês</label>
+      <input type="month" id="month" />
+      <p><a href="/pages/contas.html">Ir para Contas</a></p>
+    </div>
+
+    <section class="grid grid-4">
+      <article class="card"><h3>Em aberto</h3><p id="open"></p></article>
+      <article class="card"><h3>Pago</h3><p id="paid"></p></article>
+      <article class="card"><h3>Atrasado</h3><p id="overdue"></p></article>
+      <article class="card"><h3>Vence hoje</h3><p id="today"></p></article>
+    </section>
+
+    <section class="card" style="margin-top:12px;">
+      <h3>Comparação com mês anterior</h3>
+      <p id="diff"></p>
+    </section>
+
+    <section class="card" style="margin-top:12px;">
+      <h3>Gráfico simplificado (somatório por dia)</h3>
+      <ul id="chartList"></ul>
+    </section>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

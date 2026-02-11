@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contas a Pagar</title>
+  <script>
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        window.location.href = res.ok ? '/pages/dashboard.html' : '/pages/login.html';
+      } catch {
+        window.location.href = '/pages/login.html';
+      }
+    })();
+  </script>
+</head>
+<body></body>
+</html>
