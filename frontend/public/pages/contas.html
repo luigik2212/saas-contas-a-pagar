@@ -7,39 +7,21 @@
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
-  <div class="container">
-    <header class="topbar no-print">
-      <div class="topbar-brand">
-        <img src="/assets/logo-saldo-facil.svg" alt="SaldoFacil" class="brand-logo" />
-        <h1>Contas</h1>
+  <div class="app-shell" data-app-shell></div>
+
+  <aside class="drawer" data-drawer="filters" aria-label="Filtros">
+    <div class="drawer-header">
+      <h3>Filtros</h3>
+      <button class="icon-btn" data-drawer-close aria-label="Fechar">✕</button>
+    </div>
+    <form id="filterForm" class="drawer-body">
+      <div>
+        <label for="f_month">Mês</label>
+        <input id="f_month" name="month" type="month" />
       </div>
       <div>
-        <a href="/pages/dashboard.html">Dashboard</a>
-        <button id="logoutBtn" class="secondary">Sair</button>
-      </div>
-    </header>
-
-    <section class="card no-print">
-      <h3>Nova conta</h3>
-      <form id="billForm" class="form">
-        <div class="row">
-          <input id="title" placeholder="Título" required />
-          <input id="amount_cents" type="number" min="1" placeholder="Valor em centavos (ex.: 12990)" required />
-        </div>
-        <div class="row">
-          <input id="due_date" type="date" required />
-          <select id="category_id"></select>
-        </div>
-        <textarea id="notes" placeholder="Observações"></textarea>
-        <button type="submit">Salvar</button>
-      </form>
-    </section>
-
-    <section class="card no-print" style="margin-top:12px;">
-      <h3>Filtros</h3>
-      <div class="row">
-        <input id="f_month" type="month" />
-        <select id="f_status">
+        <label for="f_status">Status</label>
+        <select id="f_status" name="status">
           <option value="all">Todos</option>
           <option value="open">Abertos</option>
           <option value="paid">Pagos</option>
@@ -47,32 +29,26 @@
           <option value="overdue">Atrasados</option>
         </select>
       </div>
-      <div class="row">
-        <select id="f_category"></select>
-        <input id="f_search" placeholder="Buscar por título/observação" />
+      <div>
+        <label for="f_category">Categoria</label>
+        <select id="f_category" name="category_id"></select>
       </div>
-      <div class="row">
-        <button id="filterBtn">Aplicar</button>
-        <button id="exportBtn" class="secondary" type="button">Exportar CSV</button>
+      <div>
+        <label for="f_search">Busca</label>
+        <input id="f_search" name="search" placeholder="Título/observação" />
       </div>
-      <button id="printBtn" class="secondary" type="button">Imprimir</button>
-    </section>
+    </form>
+    <div class="drawer-actions">
+      <button id="clearFiltersBtn" class="btn btn-secondary" type="button">Limpar</button>
+      <button id="applyFiltersBtn" class="btn btn-primary" type="button">Aplicar</button>
+    </div>
+  </aside>
 
-    <section class="card" style="margin-top:12px;">
-      <table>
-        <thead><tr><th>Título</th><th>Valor</th><th>Vencimento</th><th>Status</th><th>Ações</th></tr></thead>
-        <tbody id="rows"></tbody>
-      </table>
-      <div class="actions no-print" style="margin-top:8px;">
-        <button id="prevBtn" class="secondary">Anterior</button>
-        <span id="pageInfo"></span>
-        <button id="nextBtn" class="secondary">Próxima</button>
-      </div>
-    </section>
-  </div>
+  <div class="modal" id="appModal"></div>
 
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
+  <script src="/js/ui.js"></script>
   <script src="/js/contas.js"></script>
 </body>
 </html>

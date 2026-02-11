@@ -7,43 +7,12 @@
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
-  <div class="container">
-    <header class="topbar no-print">
-      <div class="topbar-brand">
-        <img src="/assets/logo-saldo-facil.svg" alt="SaldoFacil" class="brand-logo" />
-        <h1>Dashboard</h1>
-      </div>
-      <div>
-        <span id="hello"></span>
-        <button id="logoutBtn" class="secondary">Sair</button>
-      </div>
-    </header>
+  <div class="app-shell" data-app-shell></div>
+  <div class="modal" id="appModal"></div>
 
-    <div class="card no-print" style="margin:12px 0;">
-      <label>Mês</label>
-      <input type="month" id="month" />
-      <p><a href="/pages/contas.html">Ir para Contas</a></p>
-    </div>
-
-    <section class="grid grid-4">
-      <article class="card"><h3>Em aberto</h3><p id="open"></p></article>
-      <article class="card"><h3>Pago</h3><p id="paid"></p></article>
-      <article class="card"><h3>Atrasado</h3><p id="overdue"></p></article>
-      <article class="card"><h3>Vence hoje</h3><p id="today"></p></article>
-    </section>
-
-    <section class="card" style="margin-top:12px;">
-      <h3>Comparação com mês anterior</h3>
-      <p id="diff"></p>
-    </section>
-
-    <section class="card" style="margin-top:12px;">
-      <h3>Gráfico simplificado (somatório por dia)</h3>
-      <ul id="chartList"></ul>
-    </section>
-  </div>
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
+  <script src="/js/ui.js"></script>
   <script src="/js/dashboard.js"></script>
 </body>
 </html>
