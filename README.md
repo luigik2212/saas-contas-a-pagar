@@ -1,43 +1,34 @@
-# SaaS Contas a Pagar - Sprint 1
+# SaaS Contas a Pagar - Sprint 1 (UI Refactor)
 
-## 1) Pré-requisitos
-- Node.js 18+
-- MySQL 8+
-- PowerShell (Windows)
+## Rodar em desenvolvimento
+1. Instale dependências e configure o banco:
+   ```bash
+   cd backend
+   npm install
+   cp .env.example .env
+   ```
+2. Edite `backend/.env` com credenciais MySQL e execute schema (`backend/schema.sql`).
+3. Suba o app:
+   ```bash
+   cd backend
+   npm run dev
+   ```
+4. Acesse `http://localhost:3000`.
 
-## 2) Instalação (PowerShell)
-```powershell
-cd .\backend
-npm install
-Copy-Item .env.example .env
-```
+## Onde ajustar cores e branding
+- **Paleta e tokens visuais:** `frontend/public/css/styles.css` (`:root`).
+- **Logo / nome do produto no shell:** `frontend/public/js/ui.js` (função `initAppShell`).
+- **Páginas públicas (login/print):** `frontend/public/pages/login.html` e `frontend/public/pages/print.html`.
 
-Edite o arquivo `.env` com credenciais do seu MySQL.
+## Sidebar colapsável
+- Persistência via `localStorage` na chave `sf_sidebar_collapsed`.
+- Implementação em `frontend/public/js/ui.js` (`initAppShell` + `applySidebarState`).
+- Desktop: colapsa para ~72px.
+- Mobile: vira drawer com botão hamburger e fecha ao navegar/ESC.
 
-## 3) Criar banco e tabelas
-```powershell
-# opção 1 (mysql client)
-mysql -u root -p < .\schema.sql
-
-# opção 2: copiar e executar o SQL do arquivo backend\schema.sql no seu cliente MySQL
-```
-
-## 4) Rodar aplicação
-```powershell
-cd .\backend
-npm run dev
-```
-
-O backend serve também o frontend estático.
-Abra no navegador: `http://localhost:3000`
-
-## 5) Fluxo
-1. Registrar usuário em `/pages/login.html`.
-2. Sistema cria categorias padrão por usuário.
-3. Usar dashboard e contas.
-
-## Segurança e multiusuário
-- Sessões em cookie `httpOnly` com `express-session` + `connect-mysql2`.
-- Rotas protegidas em `/api/*` (exceto login/register).
-- Isolamento total por `user_id` em tabelas e queries.
-- Acesso a recurso de outro usuário retorna `404` por `WHERE id = ? AND user_id = ?`.
+## Filtros de Contas (drawer)
+- Botão **Filtros** abre drawer lateral (desktop) ou bottom-sheet (mobile).
+- Estado de filtros fica em query string (`month`, `status`, `category_id`, `search`) e é reaplicado ao recarregar.
+- Ações:
+  - **Aplicar**: salva filtros e recarrega lista.
+  - **Limpar**: volta para mês atual e status `all`.
