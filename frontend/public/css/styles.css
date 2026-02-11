@@ -1,0 +1,45 @@
+:root {
+  --bg: #0b0b10;
+  --surface: #151525;
+  --surface-2: #1d1b33;
+  --primary: #7b2ff7;
+  --primary-2: #ab68ff;
+  --text: #f4f2ff;
+  --muted: #aaa5bf;
+  --danger: #ff5d6c;
+  --success: #27d082;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); color: var(--text); }
+a { color: var(--primary-2); }
+.container { width: min(1100px, 92%); margin: 0 auto; padding: 16px 0 32px; }
+.topbar { display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; }
+.card { background: linear-gradient(180deg, var(--surface), var(--surface-2)); border: 1px solid #2f2a52; border-radius: 12px; padding: 14px; }
+.grid { display:grid; gap:12px; }
+.grid-4 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+button, input, select, textarea {
+  width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #332f52;
+  background: #101021; color: var(--text);
+}
+button { background: linear-gradient(180deg, var(--primary), #6220ca); border: none; cursor: pointer; font-weight: 700; }
+button.secondary { background: #25213f; }
+button.danger { background: #702; }
+.form { display:grid; gap:10px; }
+.row { display:grid; grid-template-columns: 1fr; gap:10px; }
+.badge { display:inline-block; padding: 4px 8px; border-radius: 999px; font-size: 12px; }
+.badge.open { background:#36295f; color:#cba7ff; }
+.badge.paid { background:#133d2d; color:#a8f8cf; }
+.badge.today { background:#513f0a; color:#ffe58f; }
+.badge.overdue { background:#4c1c28; color:#ffc2cb; }
+table { width:100%; border-collapse: collapse; }
+th, td { border-bottom: 1px solid #2a2544; padding:8px; text-align:left; font-size: 14px; }
+.actions { display:flex; gap:6px; }
+.auth-wrap { min-height:100vh; display:grid; place-items:center; }
+.auth-card { width:min(450px, 92%); }
+.hidden { display:none; }
+@media (min-width: 760px) { .row { grid-template-columns: repeat(2, 1fr); } }
+@media print {
+  body { background: #fff !important; color: #000 !important; }
+  .no-print { display: none !important; }
+  .card { background: #fff !important; border: 1px solid #ccc !important; }
+}

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Contas</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <main class="auth-wrap">
+    <section class="card auth-card">
+      <h1>Contas a Pagar</h1>
+      <p class="muted">SaaS multiusuário - Sprint 1</p>
+      <div class="row">
+        <button id="tabLogin">Entrar</button>
+        <button id="tabRegister" class="secondary">Criar conta</button>
+      </div>
+      <form id="loginForm" class="form">
+        <input type="email" id="loginEmail" placeholder="E-mail" required />
+        <input type="password" id="loginPassword" placeholder="Senha" required />
+        <button type="submit">Entrar</button>
+      </form>
+      <form id="registerForm" class="form hidden">
+        <input type="text" id="registerName" placeholder="Nome" required />
+        <input type="email" id="registerEmail" placeholder="E-mail" required />
+        <input type="password" id="registerPassword" placeholder="Senha (mínimo 6)" required />
+        <button type="submit">Registrar</button>
+      </form>
+      <p id="msg"></p>
+    </section>
+  </main>
+  <script src="/js/api.js"></script>
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const msg = document.getElementById('msg');
+
+    document.getElementById('tabLogin').onclick = () => {
+      loginForm.classList.remove('hidden');
+      registerForm.classList.add('hidden');
+    };
+
+    document.getElementById('tabRegister').onclick = () => {
+      registerForm.classList.remove('hidden');
+      loginForm.classList.add('hidden');
+    };
+
+    loginForm.onsubmit = async (e) => {
+      e.preventDefault();
+      try {
+        await api('/api/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({
+            email: document.getElementById('loginEmail').value,
+            password: document.getElementById('loginPassword').value
+          })
+        });
+        window.location.href = '/pages/dashboard.html';
+      } catch (err) { msg.textContent = err.message; }
+    };
+
+    registerForm.onsubmit = async (e) => {
+      e.preventDefault();
+      try {
+        await api('/api/auth/register', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: document.getElementById('registerName').value,
+            email: document.getElementById('registerEmail').value,
+            password: document.getElementById('registerPassword').value
+          })
+        });
+        window.location.href = '/pages/dashboard.html';
+      } catch (err) { msg.textContent = err.message; }
+    };
+  </script>
+</body>
+</html>
