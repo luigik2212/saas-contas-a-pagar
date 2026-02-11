@@ -6,19 +6,133 @@
   <title>Relatório - SaldoFacil</title>
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
-<body>
-  <div class="container">
-    <div class="brand compact" style="margin-bottom: 10px;">
-      <img src="/assets/logo-saldo-facil.svg" alt="SaldoFacil" class="brand-logo" />
-    </div>
-    <h1 id="title">Relatório</h1>
-    <table>
-      <thead><tr><th>Título</th><th>Valor</th><th>Vencimento</th><th>Status</th><th>Categoria</th></tr></thead>
-      <tbody id="rows"></tbody>
-    </table>
+<body class="print-page">
+  <div class="container print-container">
+    <header class="print-header">
+      <div class="print-brand">
+        <img src="/assets/logo-saldo-facil.svg" alt="SaldoFacil" class="brand-logo" />
+        <div>
+          <h1 id="title">Relatório</h1>
+          <p class="muted">Controle mensal de contas a pagar</p>
+        </div>
+      </div>
+      <div class="print-meta">
+        <p><span>Período:</span> <strong id="reportPeriod">-</strong></p>
+        <p><span>Gerado em:</span> <strong id="generatedAt">-</strong></p>
+      </div>
+    </header>
+
+    <section class="print-summary" aria-label="Resumo do relatório">
+      <article class="print-summary-card">
+        <span>Aberto</span>
+        <strong id="summaryOpen">R$ 0,00</strong>
+      </article>
+      <article class="print-summary-card">
+        <span>Pago</span>
+        <strong id="summaryPaid">R$ 0,00</strong>
+      </article>
+      <article class="print-summary-card">
+        <span>Atraso</span>
+        <strong id="summaryOverdue">R$ 0,00</strong>
+      </article>
+      <article class="print-summary-card">
+        <span>Total do mês</span>
+        <strong id="summaryTotal">R$ 0,00</strong>
+      </article>
+    </section>
+
+    <section class="card print-table-card">
+      <div class="print-table-head no-print">
+        <h2>Contas listadas</h2>
+        <button type="button" class="btn btn-primary" onclick="window.print()">Imprimir</button>
+      </div>
+      <div class="table-wrap">
+        <table class="print-table">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Categoria</th>
+              <th>Vencimento</th>
+              <th>Status</th>
+              <th>Valor</th>
+              <th>Pago em</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
   </div>
+
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/print.js"></script>
+  <script>
+    const currencyToFloat = (value) => {
+      if (!value) return 0;
+      const normalized = value.replace(/[^\d,-]/g, '').replace('.', '').replace(',', '.');
+      return Number.parseFloat(normalized) || 0;
+    };
+
+    const formatStatus = (status) => {
+      const normalized = String(status || '').toLowerCase();
+      if (normalized === 'paid') return 'Pago';
+      if (normalized === 'overdue') return 'Atrasado';
+      if (normalized === 'today') return 'Vence hoje';
+      return 'Aberto';
+    };
+
+    const updateSummary = () => {
+      const rows = [...document.querySelectorAll('#rows tr')];
+      const totals = { open: 0, paid: 0, overdue: 0, total: 0 };
+
+      rows.forEach((row) => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 5) return;
+
+        if (cells.length === 5) {
+          const [title, amount, dueDate, status, category] = [...cells].map((cell) => cell.textContent.trim());
+          row.innerHTML = `
+            <td>${title || '-'}</td>
+            <td>${category || '-'}</td>
+            <td>${dueDate || '-'}</td>
+            <td><span class="print-status">${formatStatus(status)}</span></td>
+            <td>${amount || 'R$ 0,00'}</td>
+            <td>-</td>
+          `;
+        } else {
+          const statusCell = cells[3];
+          statusCell.innerHTML = `<span class="print-status">${formatStatus(statusCell.textContent.trim())}</span>`;
+        }
+
+        const amountValue = currencyToFloat(row.querySelectorAll('td')[4].textContent.trim());
+        const statusText = row.querySelectorAll('td')[3].textContent.trim().toLowerCase();
+
+        totals.total += amountValue;
+        if (statusText.includes('pago')) totals.paid += amountValue;
+        else if (statusText.includes('atras')) totals.overdue += amountValue;
+        else totals.open += amountValue;
+      });
+
+      document.getElementById('summaryOpen').textContent = totals.open.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('summaryPaid').textContent = totals.paid.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('summaryOverdue').textContent = totals.overdue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('summaryTotal').textContent = totals.total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    };
+
+    const setReportMeta = () => {
+      const titleText = document.getElementById('title').textContent;
+      const period = titleText.split('-').slice(-1).join('-').trim() || new Date().toISOString().slice(0, 7);
+      document.getElementById('reportPeriod').textContent = period;
+      document.getElementById('generatedAt').textContent = new Date().toLocaleString('pt-BR');
+    };
+
+    const initializeReportEnhancements = () => {
+      setReportMeta();
+      updateSummary();
+    };
+
+    setTimeout(initializeReportEnhancements, 220);
+  </script>
 </body>
 </html>
