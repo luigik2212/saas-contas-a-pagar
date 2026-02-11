@@ -6,29 +6,52 @@
   <title>Login - SaldoFacil</title>
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
-<body>
+<body class="auth-page">
   <main class="auth-wrap">
-    <section class="card auth-card">
-      <div class="brand">
-        <img src="/assets/logo-saldo-facil.svg" alt="SaldoFacil" class="brand-logo" />
+    <section class="card auth-card" aria-labelledby="authTitle">
+      <header class="auth-branding">
+        <div class="brand">
+          <img src="/assets/logo-saldo-facil.svg" alt="SaldoFacil" class="brand-logo" />
+        </div>
+        <p class="auth-eyebrow">Gestão financeira inteligente</p>
+        <h1 id="authTitle">Acesse sua conta</h1>
+        <p class="muted auth-subtitle">Entre para visualizar suas contas e manter o fluxo financeiro sempre em dia.</p>
+      </header>
+
+      <div class="row auth-switch" role="tablist" aria-label="Alternar entre entrar e criar conta">
+        <button id="tabLogin" type="button" class="btn btn-primary is-active" role="tab" aria-selected="true" aria-controls="loginForm" tabindex="1">Entrar</button>
+        <button id="tabRegister" type="button" class="btn btn-secondary" role="tab" aria-selected="false" aria-controls="registerForm" tabindex="2">Criar conta</button>
       </div>
-      <p class="muted">SaaS multiusuário para gerenciamento de contas.</p>
-      <div class="row">
-        <button id="tabLogin">Entrar</button>
-        <button id="tabRegister" class="secondary">Criar conta</button>
-      </div>
-      <form id="loginForm" class="form">
-        <input type="email" id="loginEmail" placeholder="E-mail" required />
-        <input type="password" id="loginPassword" placeholder="Senha" required />
-        <button type="submit">Entrar</button>
+
+      <form id="loginForm" class="form" novalidate>
+        <div class="form-field">
+          <label for="loginEmail">E-mail</label>
+          <input type="email" id="loginEmail" placeholder="voce@empresa.com" autocomplete="email" required autofocus tabindex="3" />
+        </div>
+        <div class="form-field">
+          <label for="loginPassword">Senha</label>
+          <input type="password" id="loginPassword" placeholder="Digite sua senha" autocomplete="current-password" required tabindex="4" />
+        </div>
+        <button type="submit" class="btn btn-primary auth-submit" tabindex="5">Entrar</button>
       </form>
-      <form id="registerForm" class="form hidden">
-        <input type="text" id="registerName" placeholder="Nome" required />
-        <input type="email" id="registerEmail" placeholder="E-mail" required />
-        <input type="password" id="registerPassword" placeholder="Senha (mínimo 6)" required />
-        <button type="submit">Registrar</button>
+
+      <form id="registerForm" class="form hidden" novalidate>
+        <div class="form-field">
+          <label for="registerName">Nome</label>
+          <input type="text" id="registerName" placeholder="Seu nome completo" autocomplete="name" required tabindex="3" />
+        </div>
+        <div class="form-field">
+          <label for="registerEmail">E-mail</label>
+          <input type="email" id="registerEmail" placeholder="voce@empresa.com" autocomplete="email" required tabindex="4" />
+        </div>
+        <div class="form-field">
+          <label for="registerPassword">Senha</label>
+          <input type="password" id="registerPassword" placeholder="Mínimo de 6 caracteres" autocomplete="new-password" minlength="6" required tabindex="5" />
+        </div>
+        <button type="submit" class="btn btn-secondary auth-submit" tabindex="6">Criar conta</button>
       </form>
-      <p id="msg"></p>
+
+      <p id="msg" class="auth-message" role="status" aria-live="polite"></p>
     </section>
   </main>
   <script src="/js/api.js"></script>
@@ -36,19 +59,37 @@
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const msg = document.getElementById('msg');
+    const tabLogin = document.getElementById('tabLogin');
+    const tabRegister = document.getElementById('tabRegister');
 
-    document.getElementById('tabLogin').onclick = () => {
-      loginForm.classList.remove('hidden');
-      registerForm.classList.add('hidden');
-    };
+    function setMessage(text, type = 'error') {
+      msg.textContent = text || '';
+      msg.classList.remove('is-error', 'is-success');
+      if (!text) return;
+      msg.classList.add(type === 'success' ? 'is-success' : 'is-error');
+    }
 
-    document.getElementById('tabRegister').onclick = () => {
-      registerForm.classList.remove('hidden');
-      loginForm.classList.add('hidden');
-    };
+    function toggleAuth(isLogin) {
+      loginForm.classList.toggle('hidden', !isLogin);
+      registerForm.classList.toggle('hidden', isLogin);
+      tabLogin.classList.toggle('is-active', isLogin);
+      tabRegister.classList.toggle('is-active', !isLogin);
+      tabLogin.classList.toggle('btn-primary', isLogin);
+      tabLogin.classList.toggle('btn-secondary', !isLogin);
+      tabRegister.classList.toggle('btn-primary', !isLogin);
+      tabRegister.classList.toggle('btn-secondary', isLogin);
+      tabLogin.setAttribute('aria-selected', String(isLogin));
+      tabRegister.setAttribute('aria-selected', String(!isLogin));
+      setMessage('');
+      (isLogin ? document.getElementById('loginEmail') : document.getElementById('registerName')).focus();
+    }
+
+    tabLogin.onclick = () => toggleAuth(true);
+    tabRegister.onclick = () => toggleAuth(false);
 
     loginForm.onsubmit = async (e) => {
       e.preventDefault();
+      setMessage('');
       try {
         await api('/api/auth/login', {
           method: 'POST',
@@ -57,12 +98,16 @@
             password: document.getElementById('loginPassword').value
           })
         });
+        setMessage('Login realizado com sucesso. Redirecionando...', 'success');
         window.location.href = '/pages/dashboard.html';
-      } catch (err) { msg.textContent = err.message; }
+      } catch (err) {
+        setMessage(err.message);
+      }
     };
 
     registerForm.onsubmit = async (e) => {
       e.preventDefault();
+      setMessage('');
       try {
         await api('/api/auth/register', {
           method: 'POST',
@@ -72,8 +117,11 @@
             password: document.getElementById('registerPassword').value
           })
         });
+        setMessage('Conta criada com sucesso. Redirecionando...', 'success');
         window.location.href = '/pages/dashboard.html';
-      } catch (err) { msg.textContent = err.message; }
+      } catch (err) {
+        setMessage(err.message);
+      }
     };
   </script>
 </body>
